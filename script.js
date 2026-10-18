@@ -189,6 +189,41 @@ function setupImageMotion() {
   });
 }
 
+function setupFooter13() {
+  $$("footer.footer").forEach(footer => {
+    footer.classList.add("footer13");
+    const newsletter = footer.querySelector(".footer-newsletter");
+    const extras = [
+      {
+        title: "COMPRAR",
+        links: [{ label: "Perfumes", href: "perfumes.html" }, { label: "Fracionados", href: "perfumes.html?categoria=Fracionados" }, { label: "Checkout", href: "checkout.html" }]
+      },
+      {
+        title: "A LEAL LAVIE",
+        links: [{ label: "Nossa curadoria", href: "index.html#ritual" }, { label: "Instagram", href: "https://www.instagram.com/leallavie/" }, { label: "Lavras · MG", href: "https://www.instagram.com/leallavie/" }]
+      }
+    ];
+    extras.forEach(column => {
+      if (!newsletter || footer.querySelector(`[data-footer-extra="${column.title}"]`)) return;
+      const node = document.createElement("div");
+      node.className = "footer-column footer-extra";
+      node.dataset.footerExtra = column.title;
+      node.innerHTML = `<p class="eyebrow">${column.title}</p>${column.links.map(link => `<a href="${link.href}"${link.href.startsWith("https://") ? ' target="_blank" rel="noreferrer"' : ""}>${link.label}</a>`).join("")}`;
+      footer.insertBefore(node, newsletter);
+    });
+    const feedback = footer.querySelector("[data-form-feedback]");
+    if (feedback) feedback.textContent = "";
+    const bottom = footer.querySelector(".footer-bottom");
+    if (bottom && !bottom.querySelector(".footer-socials")) {
+      const socials = document.createElement("div");
+      socials.className = "footer-socials";
+      socials.setAttribute("aria-label", "Redes sociais");
+      socials.innerHTML = `<a href="https://www.instagram.com/leallavie/" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a><a href="mailto:oi@leallavie.com.br" aria-label="Enviar e-mail">@</a>`;
+      bottom.insertBefore(socials, bottom.lastElementChild);
+    }
+  });
+}
+
 function openDrawer() { const drawer = $("[data-cart-drawer]"); if (!drawer) return; drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); $(".drawer-backdrop")?.classList.add("is-open"); }
 function closeDrawer() { const drawer = $("[data-cart-drawer]"); if (!drawer) return; drawer.classList.remove("is-open"); drawer.setAttribute("aria-hidden", "true"); $(".drawer-backdrop")?.classList.remove("is-open"); }
 
@@ -262,6 +297,7 @@ function setupGlobalInteractions() {
 }
 
 readUrlState();
+setupFooter13();
 setupGlobalInteractions();
 setupHeroCarousel();
 renderProducts();
