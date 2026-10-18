@@ -266,6 +266,11 @@ blockquote { max-width: 900px; color: var(--cream); font-size: clamp(44px, 6vw, 
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } .hero-slide img, .editorial-tile img, .product-media img { transform: none !important; } .hero-carousel::before, .editorial-tile::after { display: none; } }
+
+/* Canvas UI Liquid Object powers the hero when WebGL is available. */
+.hero-liquid-canvas { position: absolute; z-index: 1; inset: 0; display: block; width: 100%; height: 100%; touch-action: pan-y; }
+.hero-carousel.has-liquid-engine .hero-slide img { opacity: 0; }
+.hero-carousel.has-liquid-engine .hero-slide { transition: opacity .45s var(--ease-out); }
 @media (max-width: 900px) {
   .site-header { grid-template-columns: auto 1fr auto; min-height: 84px; padding: 14px 20px; }
   .desktop-nav { display: none; }

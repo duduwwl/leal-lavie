@@ -122,8 +122,13 @@ function showToast(message) { const toast = $("[data-toast]"); if (!toast) retur
 function setupHeroCarousel() {
   const carousel = $("[data-hero-carousel]");
   if (!carousel) return;
+  const rejectedSlide = [...carousel.querySelectorAll("[data-hero-slide]")].find(slide =>
+    slide.querySelector("img")?.src.includes("photo-1615634260167-c8cdede054de")
+  );
+  rejectedSlide?.remove();
   const slides = [...carousel.querySelectorAll("[data-hero-slide]")];
   const dots = [...carousel.querySelectorAll("[data-hero-dot]")];
+  if (dots.length > slides.length) dots.slice(slides.length).forEach(dot => dot.remove());
   if (slides.length < 2) return;
   let current = 0;
   let timer;
@@ -140,6 +145,9 @@ function setupHeroCarousel() {
       dot.classList.toggle("is-active", active);
       dot.setAttribute("aria-selected", String(active));
     });
+    carousel.dispatchEvent(new CustomEvent("hero:slide", {
+      detail: { index: current, src: slides[current].querySelector("img")?.src }
+    }));
   };
   const stop = () => { window.clearInterval(timer); };
   const start = () => { if (!reduceMotion) { stop(); timer = window.setInterval(() => show(current + 1), 4800); } };
@@ -148,14 +156,61 @@ function setupHeroCarousel() {
   carousel.addEventListener("mouseleave", start);
   carousel.addEventListener("focusin", stop);
   carousel.addEventListener("focusout", event => { if (!carousel.contains(event.relatedTarget)) start(); });
+  setupLiquidHero(carousel, slides[0].querySelector("img")?.src);
   show(0);
   start();
+}
+
+function setupLiquidHero(carousel, initialSource) {
+  if (!initialSource || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const canvas = document.createElement("canvas");
+  canvas.className = "hero-liquid-canvas";
+  canvas.setAttribute("aria-hidden", "true");
+  carousel.prepend(canvas);
+
+  const moduleUrl = "https://esm.sh/gh/DavidHDev/canvas-ui@a04a99b235299ee79a123a16ccb2e6cf9da74b6b/es2022/src/lib/LiquidObject/LiquidObjectVanilla.ts.bundle.mjs";
+  import(moduleUrl).then(({ createLiquidObject }) => {
+    let instance = null;
+    instance = createLiquidObject({ canvas }, {
+      src: initialSource,
+      orbit: false,
+      zoom: false,
+      distortion: 2,
+      aberration: 0.75,
+      grain: 0.7,
+      sheen: 1.5,
+      cursorForce: 0.9,
+      cursorSize: 0.75,
+      persistence: 0.65,
+      swirl: 0.55,
+      iridescence: 1.25,
+      splash: 0.8,
+      ambient: 0.6,
+      floatIntensity: 0.25,
+      rotationIntensity: 0.08,
+      onLoad: () => carousel.classList.add("has-liquid-engine"),
+      onError: () => {
+        carousel.classList.remove("has-liquid-engine");
+        canvas.remove();
+        instance?.destroy();
+      }
+    });
+    if (!instance) {
+      canvas.remove();
+      return;
+    }
+    carousel.addEventListener("hero:slide", event => {
+      if (event.detail?.src) instance.setOptions({ src: event.detail.src });
+    });
+    const activeSource = carousel.querySelector(".hero-slide.is-active img")?.src;
+    if (activeSource && activeSource !== initialSource) instance.setOptions({ src: activeSource });
+    window.addEventListener("pagehide", () => instance.destroy(), { once: true });
+  }).catch(() => canvas.remove());
 }
 
 function setupImageMotion() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(pointer: fine)").matches) return;
   const targets = [
-    ...$$('[data-hero-carousel]'),
     ...$$('.editorial-tile'),
     ...$$('.product-media')
   ];
@@ -304,4 +359,3 @@ renderProducts();
 updateCartUI();
 renderCheckout();
 setupCheckout();
-
