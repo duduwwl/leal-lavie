@@ -405,3 +405,12 @@ footer.footer13::before { display: none; }
   footer.footer13 .footer-bottom > :last-child { grid-column: 1; grid-row: 3; }
 }
 
+/* The editorial image block is intentionally removed from the final footer. */
+footer.footer13::before {
+  content: none !important;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+}
+
