@@ -175,19 +175,20 @@ function setupLiquidHero(carousel, initialSource) {
       src: initialSource,
       orbit: false,
       zoom: false,
-      distortion: 2,
-      aberration: 0.75,
-      grain: 0.7,
-      sheen: 1.5,
+      distortion: 0,
+      aberration: 0,
+      grain: 0,
+      sheen: 0,
       cursorForce: 0.9,
       cursorSize: 0.75,
-      persistence: 0.65,
-      swirl: 0.55,
-      iridescence: 1.25,
-      splash: 0.8,
-      ambient: 0.6,
-      floatIntensity: 0.25,
-      rotationIntensity: 0.08,
+      persistence: 0,
+      swirl: 0,
+      iridescence: 0,
+      splash: 0,
+      ambient: 0,
+      wobble: 0.45,
+      floatIntensity: 0.12,
+      rotationIntensity: 0.025,
       onLoad: () => carousel.classList.add("has-liquid-engine"),
       onError: () => {
         carousel.classList.remove("has-liquid-engine");
@@ -359,3 +360,4 @@ renderProducts();
 updateCartUI();
 renderCheckout();
 setupCheckout();
+
