@@ -93,6 +93,7 @@ function renderProducts() {
   $$('[data-filter]').forEach(button => button.classList.toggle("active", button.dataset.filter === state.filter));
   const familySelect = $("[data-family-filter]");
   if (familySelect) familySelect.value = state.family;
+  setupImageMotion();
 }
 
 function addToCart(id) {
@@ -149,6 +150,43 @@ function setupHeroCarousel() {
   carousel.addEventListener("focusout", event => { if (!carousel.contains(event.relatedTarget)) start(); });
   show(0);
   start();
+}
+
+function setupImageMotion() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(pointer: fine)").matches) return;
+  const targets = [
+    ...$$('[data-hero-carousel]'),
+    ...$$('.editorial-tile'),
+    ...$$('.product-media')
+  ];
+  targets.forEach(container => {
+    if (container.dataset.motionReady === "true") return;
+    if (!container.querySelector("img")) return;
+    container.dataset.motionReady = "true";
+    let frame = 0;
+    const reset = () => {
+      cancelAnimationFrame(frame);
+      container.style.setProperty("--pointer-x", "0px");
+      container.style.setProperty("--pointer-y", "0px");
+      container.style.setProperty("--glow-x", "50%");
+      container.style.setProperty("--glow-y", "50%");
+      container.classList.remove("is-interactive");
+    };
+    container.addEventListener("pointermove", event => {
+      const bounds = container.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width - .5) * 2;
+      const y = ((event.clientY - bounds.top) / bounds.height - .5) * 2;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        container.style.setProperty("--pointer-x", `${(x * 5).toFixed(2)}px`);
+        container.style.setProperty("--pointer-y", `${(y * 5).toFixed(2)}px`);
+        container.style.setProperty("--glow-x", `${(50 + x * 20).toFixed(1)}%`);
+        container.style.setProperty("--glow-y", `${(50 + y * 20).toFixed(1)}%`);
+        container.classList.add("is-interactive");
+      });
+    }, { passive: true });
+    container.addEventListener("pointerleave", reset);
+  });
 }
 
 function openDrawer() { const drawer = $("[data-cart-drawer]"); if (!drawer) return; drawer.classList.add("is-open"); drawer.setAttribute("aria-hidden", "false"); $(".drawer-backdrop")?.classList.add("is-open"); }
