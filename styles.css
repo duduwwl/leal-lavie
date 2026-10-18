@@ -330,20 +330,6 @@ footer.footer13 {
   background: var(--footer-bg) !important;
   color: var(--cream) !important;
 }
-footer.footer13::before {
-  content: "";
-  grid-column: 1 / -1;
-  display: block;
-  width: calc(100% + 64px);
-  height: clamp(240px, 39vw, 520px);
-  margin-left: -32px;
-  background-color: var(--footer-bg);
-  background-image: linear-gradient(180deg, rgba(16,11,13,.02) 34%, rgba(16,11,13,.62) 100%), url("https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1400&q=88");
-  background-position: center, center;
-  background-size: 100% 100%, contain;
-  background-repeat: no-repeat;
-  border-bottom: 1px solid rgba(248,238,228,.1);
-}
 footer.footer13 .footer-brand {
   grid-column: 1 / -1;
   display: flex;
@@ -384,8 +370,6 @@ footer.footer13 .footer-bottom a { color: var(--gold); }
 footer.footer13 .footer-socials { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 footer.footer13 .footer-socials a { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(248,238,228,.16); border-radius: 50%; color: rgba(248,238,228,.68); font-size: 9px; letter-spacing: .04em; transition: border-color .2s, color .2s, transform .2s; }
 footer.footer13 .footer-socials a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-footer.footer13::before { display: none; }
-
 @media (max-width: 900px) {
   footer.footer13 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0 22px !important; }
   footer.footer13 .footer-newsletter { grid-column: 1 / -1; }
@@ -394,7 +378,6 @@ footer.footer13::before { display: none; }
 }
 @media (max-width: 560px) {
   footer.footer13 { grid-template-columns: 1fr 1fr !important; padding-left: 20px !important; padding-right: 20px !important; }
-  footer.footer13::before { width: calc(100% + 40px); margin-left: -20px; height: 250px; }
   footer.footer13 .footer-logo { width: 165px; }
   footer.footer13 .footer-column, footer.footer13 .footer-newsletter { padding-top: 28px; }
   footer.footer13 .footer-newsletter form { max-width: none; }
@@ -405,12 +388,4 @@ footer.footer13::before { display: none; }
   footer.footer13 .footer-bottom > :last-child { grid-column: 1; grid-row: 3; }
 }
 
-/* The editorial image block is intentionally removed from the final footer. */
-footer.footer13::before {
-  content: none !important;
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-}
 
